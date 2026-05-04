@@ -1,138 +1,138 @@
 # 🎓 Udemy Auto-Enroll Tool
 
-Tự động đăng ký các khóa học Udemy miễn phí từ bài viết Facebook. Hỗ trợ hàng đợi (queue), tự động scan khóa học, và tự khôi phục khi mất mạng.
+Automatically enroll in free Udemy courses extracted from Facebook posts. Features a smart queue system, auto-scanning, and auto-resume on network failure.
 
 ## ⚡ Quick Start
 
-### 1. Cài đặt dependencies
+### 1. Install dependencies
 
 ```bash
 pip install -r requirements.txt
 playwright install chromium
 ```
 
-### 2. Đăng nhập tài khoản (chỉ cần 1 lần)
+### 2. Login to accounts (one-time setup)
 
-Bạn cần đăng nhập cả Udemy và Facebook để tool có thể hoạt động:
+You need to log into both Udemy and Facebook for the tool to function properly:
 
 ```bash
-# Đăng nhập Udemy (để đăng ký khóa học)
+# Login to Udemy (to enroll in courses)
 python main.py login
 
-# Đăng nhập Facebook (để quét link từ các group/bài viết đóng)
+# Login to Facebook (to scan links from closed groups/posts)
 python main.py login-fb
 ```
 
-Browser sẽ mở ra → Đăng nhập tài khoản tương ứng → Nhấn Enter trong terminal. Session sẽ được lưu lại vĩnh viễn.
+The browser will open → Login to the respective account → Press Enter in the terminal. The session will be saved permanently.
 
-### 3. Paste link và đăng ký (cách nhanh nhất)
+### 3. Paste link and enroll (fastest method)
 
 ```bash
 python main.py watch
 ```
 
-Terminal sẽ chờ bạn paste link Facebook. Chỉ cần paste → tự động thêm vào queue:
+The terminal will wait for you to paste a Facebook link. Just paste it → it automatically gets added to the queue:
 
 ```
 📋 Paste link: https://www.facebook.com/share/p/abc123/
-✓ Đã thêm: FB Coupons #1 (10/03/2026) (ID: 29)
+✓ Added: FB Coupons #1 (10/03/2026) (ID: 29)
 
-📋 Paste link: run    ← gõ 'run' để chạy queue
-📋 Paste link: list   ← gõ 'list' để xem queue
-📋 Paste link: exit   ← gõ 'exit' để thoát
+📋 Paste link: run    ← type 'run' to execute queue
+📋 Paste link: list   ← type 'list' to view queue
+📋 Paste link: exit   ← type 'exit' to quit
 ```
 
-Hoặc double-click file **`start.bat`** để vào chế độ paste link ngay.
+Alternatively, double-click **`start.bat`** to enter paste mode immediately.
 
-### 4. Hàng đợi (Queue)
+### 4. Queue Management
 
 ```bash
-# Thêm link (tên tự động theo ngày + thứ tự)
+# Add link (auto-generates name based on date + sequence)
 python main.py queue add "https://facebook.com/post1"
 
-# Hoặc thêm với tên tùy chỉnh
-python main.py queue add "https://facebook.com/post2" --name "Khóa Excel 05/03"
+# Or add with a custom name
+python main.py queue add "https://facebook.com/post2" --name "Excel Course 05/03"
 
-# Xem hàng đợi
+# View the queue
 python main.py queue list
 
-# Chạy tất cả links đang chờ (pending)
+# Run all pending links
 python main.py queue run
 
-# Chạy riêng 1 hoặc nhiều link theo ID
+# Run specific links by ID
 python main.py queue run 1
 python main.py queue run 1 2 5
 
-# Chạy lại các link bị lỗi
+# Retry failed links
 python main.py queue run --retry
 
-# Xem danh sách khóa học trong 1 link (sau khi scan)
+# View courses inside a link (after scanning)
 python main.py queue courses 5
 
-# Xem kết quả
+# View enrollment report
 python main.py queue report --latest
 ```
 
-Khi chạy `queue run`, tool sẽ tự động thực hiện:
-1. **Pre-flight Check**: Kiểm tra tự động xem đã đăng nhập đủ Udemy và Facebook chưa.
-2. **Phase 1 (Scan)**: Quét tất cả links Facebook để lấy danh sách khóa học (dùng dữ liệu session Facebook).
-3. **Phase 2 (Enroll)**: Đăng ký từng khóa học tự động vào tài khoản Udemy của bạn.
+When you run `queue run`, the tool automatically executes:
+1. **Pre-flight Check**: Verifies that both Udemy and Facebook sessions are active.
+2. **Phase 1 (Scan)**: Scans all pending Facebook links to extract Udemy course URLs (using the saved Facebook session).
+3. **Phase 2 (Enroll)**: Automatically enrolls each course into your Udemy account.
 
-> **Mất mạng?** Tool tự động chờ internet khôi phục và tiếp tục từ khóa bị lỗi.
+> **Lost connection?** The tool automatically waits for the internet to restore and resumes from the failed course.
 
 ## 📋 Commands
 
-| Lệnh | Mô tả |
+| Command | Description |
 |------|-------|
-| `python main.py watch` | Chế độ tương tác - paste link |
-| `python main.py login` | Đăng nhập Udemy |
-| `python main.py login-fb` | Đăng nhập Facebook |
-| `python main.py enroll <URL>` | Đăng ký từ 1 bài viết |
-| `python main.py history` | Xem lịch sử đăng ký |
-| `python main.py status` | Kiểm tra trạng thái đăng nhập |
-| `python main.py queue add <URL>` | Thêm link (tên tự động) |
-| `python main.py queue list` | Xem hàng đợi |
-| `python main.py queue remove <ID>` | Xóa link khỏi hàng đợi |
-| `python main.py queue run` | Chạy tất cả links chờ xử lý |
-| `python main.py queue run <ID>` | Chạy links theo ID cụ thể |
-| `python main.py queue run --retry` | Chạy lại các link bị lỗi |
-| `python main.py queue courses <ID>` | Xem khóa học + trạng thái |
-| `python main.py queue report` | Xem report kết quả |
-| `python main.py queue clear` | Xóa toàn bộ hàng đợi |
+| `python main.py watch` | Interactive mode - paste links |
+| `python main.py login` | Login to Udemy |
+| `python main.py login-fb` | Login to Facebook |
+| `python main.py enroll <URL>` | Enroll from a single post URL |
+| `python main.py history` | View enrollment history |
+| `python main.py status` | Check login statuses |
+| `python main.py queue add <URL>` | Add link (auto-name) |
+| `python main.py queue list` | View queue |
+| `python main.py queue remove <ID>` | Remove link from queue |
+| `python main.py queue run` | Run all pending links |
+| `python main.py queue run <ID>` | Run specific links by ID |
+| `python main.py queue run --retry` | Retry failed links |
+| `python main.py queue courses <ID>` | View courses + statuses |
+| `python main.py queue report` | View result report |
+| `python main.py queue clear` | Clear the entire queue |
 
-## 📁 Cấu trúc
+## 📁 Structure
 
 ```
 ├── main.py              # CLI entry point
-├── config.py            # Cấu hình
-├── start.bat            # Double-click để vào chế độ paste link
+├── config.py            # Configuration
+├── start.bat            # Double-click to enter paste mode
 ├── requirements.txt     # Dependencies
 ├── data/
-│   ├── history.db       # Lịch sử đăng ký (SQLite)
-│   ├── queue.json       # Hàng đợi links + courses
-│   ├── reports/         # Report kết quả (TXT)
-│   ├── browser_data/    # Session Udemy
-│   └── fb_browser_data/ # Session Facebook
+│   ├── history.db       # Enrollment history (SQLite)
+│   ├── queue.json       # Queue links + courses
+│   ├── reports/         # Enrollment reports (TXT)
+│   ├── browser_data/    # Udemy session
+│   └── fb_browser_data/ # Facebook session
 └── modules/
-    ├── facebook_scraper.py   # Đọc Facebook post
+    ├── facebook_scraper.py   # Scrape Facebook posts
     ├── udemy_parser.py       # Parse Udemy URLs
-    ├── udemy_enroller.py     # Đăng ký khóa học
-    ├── history.py            # Lưu lịch sử
-    ├── queue_manager.py      # Quản lý hàng đợi
-    ├── report_generator.py   # Tạo report TXT
-    └── network.py            # Xử lý mất mạng/retry
+    ├── udemy_enroller.py     # Enroll in courses
+    ├── history.py            # Save history
+    ├── queue_manager.py      # Manage queue
+    ├── report_generator.py   # Generate TXT reports
+    └── network.py            # Handle connection loss/retry
 ```
 
 ## 💡 Tips
 
-- **Session lưu vĩnh viễn**: Chỉ cần đăng nhập Udemy và Facebook 1 lần (dữ liệu lưu riêng biệt).
-- **Không trùng lặp**: Tool tự bỏ qua khóa đã đăng ký
-- **Headless mode**: Đổi `HEADLESS = True` trong `config.py` để chạy ẩn browser
-- **Queue**: Thêm nhiều links, chạy 1 lần, xem report sau
-- **Network resilience**: Tự chờ nếu mất mạng, tiếp tục khi có internet
-- **queue courses**: Xem chi tiết từng khóa với trạng thái (✓ Miễn phí / ⚠ Đã đăng ký / 💰 Mất phí / ✗ Lỗi)
+- **Permanent sessions**: Only need to log into Udemy and Facebook once (data stored separately).
+- **No duplicates**: The tool automatically skips already enrolled courses.
+- **Headless mode**: Set `HEADLESS = True` in `config.py` to run the browser in the background.
+- **Queue**: Add multiple links, run once, and view the report later.
+- **Network resilience**: Auto-pauses if the connection is lost, and resumes when back online.
+- **queue courses**: View details of each course along with its status (✓ Free / ⚠ Enrolled / 💰 Paid / ✗ Error).
 
-## ⚠️ Lưu ý
+## ⚠️ Notes
 
-- Coupon có thể hết hạn, tool sẽ thông báo nếu không đăng ký được
-- Nếu mất mạng giữa chừng, tool sẽ tự động chờ và retry
+- Coupons may expire; the tool will notify you if enrollment fails.
+- If the network drops mid-process, the tool will automatically wait and retry.
