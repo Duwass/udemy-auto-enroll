@@ -1,0 +1,30 @@
+# === BẢO MẬT — KHÔNG BAO GIỜ PUSH ===
+data/browser_data/
+data/fb_browser_data/
+.env
+*.env
+
+# === DỮ LIỆU CÁ NHÂN ===
+data/history.db
+data/queue.json
+data/reports/
+data/debug_*.png
+data/progress.json
+linkpost.txt
+
+# === PYTHON CACHE ===
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyo
+
+# === AI/EDITOR CONFIG ===
+.agent/
+.gemini/
+.vscode/
+.idea/
+
+# === OS FILES ===
+Thumbs.db
+.DS_Store
+desktop.ini
